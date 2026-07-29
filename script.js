@@ -1,392 +1,290 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- DOM Elements ---
-    const checkInDateInput = document.getElementById('check-in-date');
-    const checkOutDateInput = document.getElementById('check-out-date');
-    const dateErrorMessage = document.getElementById('date-error');
-    const roomCardsContainer = document.getElementById('room-cards-container');
-    const noRoomsMessage = document.getElementById('no-rooms-message');
+    const contentArea = document.getElementById('content-area');
+    const navLinks = document.querySelectorAll('nav ul li a');
 
-    const bookingModal = document.getElementById('booking-modal');
-    const bookingModalCloseButton = bookingModal.querySelector('.close-button');
-    const modalRoomTitle = document.getElementById('modal-room-title');
-    const bookingForm = document.getElementById('booking-form');
-    const guestNameInput = document.getElementById('guest-name');
-    const guestEmailInput = document.getElementById('guest-email');
-    const guestPhoneInput = document.getElementById('guest-phone');
-    const summaryRoomType = document.getElementById('summary-room-type');
-    const summaryRoomPrice = document.getElementById('summary-room-price');
-    const summaryCheckIn = document.getElementById('summary-check-in');
-    const summaryCheckOut = document.getElementById('summary-check-out');
-    const summaryTotalNights = document.getElementById('summary-total-nights');
-    const summaryTotalPrice = document.getElementById('summary-total-price');
-
-    const confirmationModal = document.getElementById('confirmation-modal');
-    const confirmationModalCloseButton = confirmationModal.querySelector('.close-button');
-    const closeConfirmationBtn = confirmationModal.querySelector('.close-confirmation-btn');
-    const confGuestName = document.getElementById('conf-guest-name');
-    const confRoomNumber = document.getElementById('conf-room-number');
-    const confCheckIn = document.getElementById('conf-check-in');
-    const confCheckOut = document.getElementById('conf-check-out');
-
-    // --- State Variables ---
-    let rooms = [
-        {
-            id: 'R001',
-            type: 'Standard King',
-            description: 'Comfortable room with a king-size bed and city view.',
-            price: 120,
-            capacity: 2,
-            amenities: ['Free WiFi', 'Flat-screen TV', 'Mini-bar'],
-            bookings: [
-                { guestName: 'John Doe', checkIn: '2023-11-10', checkOut: '2023-11-12' },
-                { guestName: 'Jane Smith', checkIn: '2023-12-01', checkOut: '2023-12-03' }
-            ]
-        },
-        {
-            id: 'R002',
-            type: 'Standard King',
-            description: 'Comfortable room with a king-size bed and city view.',
-            price: 120,
-            capacity: 2,
-            amenities: ['Free WiFi', 'Flat-screen TV', 'Mini-bar'],
-            bookings: []
-        },
-        {
-            id: 'R003',
-            type: 'Deluxe Twin',
-            description: 'Spacious room with two twin beds and garden view.',
-            price: 150,
-            capacity: 2,
-            amenities: ['Free WiFi', 'Flat-screen TV', 'Coffee Maker'],
-            bookings: [
-                { guestName: 'Alice Johnson', checkIn: '2023-11-15', checkOut: '2023-11-18' }
-            ]
-        },
-        {
-            id: 'R004',
-            type: 'Deluxe Twin',
-            description: 'Spacious room with two twin beds and garden view.',
-            price: 150,
-            capacity: 2,
-            amenities: ['Free WiFi', 'Flat-screen TV', 'Coffee Maker'],
-            bookings: []
-        },
-        {
-            id: 'R005',
-            type: 'Executive Suite',
-            description: 'Luxurious suite with separate living area and ocean view.',
-            price: 250,
-            capacity: 3,
-            amenities: ['Free WiFi', 'Large TV', 'Jacuzzi', 'Breakfast included'],
-            bookings: [
-                { guestName: 'Bob Williams', checkIn: '2023-11-20', checkOut: '2023-11-25' }
-            ]
-        },
-        {
-            id: 'R006',
-            type: 'Executive Suite',
-            description: 'Luxurious suite with separate living area and ocean view.',
-            price: 250,
-            capacity: 3,
-            amenities: ['Free WiFi', 'Large TV', 'Jacuzzi', 'Breakfast included'],
-            bookings: []
-        }
-    ];
-
-    let selectedCheckInDate = null;
-    let selectedCheckOutDate = null;
-    let selectedRoom = null; // Stores the room object for the current booking attempt
-
-    // --- Helper Functions ---
-
-    /**
-     * Formats a date string (YYYY-MM-DD) into a more readable format (Month Day, Year).
-     * @param {string} dateString
-     * @returns {string}
-     */
-    const formatDateForDisplay = (dateString) => {
-        if (!dateString) return '';
-        const date = new Date(dateString + 'T00:00:00'); // Add T00:00:00 to avoid timezone issues
-        return date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
+    // --- Dummy Data Generation ---
+    function generateUUID() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
         });
-    };
+    }
 
-    /**
-     * Checks if a specific room is available for the given check-in and check-out dates.
-     * @param {object} room - The room object.
-     * @param {string} checkIn - The desired check-in date (YYYY-MM-DD).
-     * @param {string} checkOut - The desired check-out date (YYYY-MM-DD).
-     * @returns {boolean} - True if the room is available, false otherwise.
-     */
-    const isRoomAvailable = (room, checkIn, checkOut) => {
-        const newCheckIn = new Date(checkIn + 'T00:00:00');
-        const newCheckOut = new Date(checkOut + 'T00:00:00');
+    function getRandomDate(start, end) {
+        return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    }
 
-        for (const booking of room.bookings) {
-            const existingCheckIn = new Date(booking.checkIn + 'T00:00:00');
-            const existingCheckOut = new Date(booking.checkOut + 'T00:00:00');
+    const firstNames = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry', 'Ivy', 'Jack'];
+    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'];
+    const cities = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio', 'San Diego'];
+    const statuses = ['Confirmed', 'Checked-in', 'Checked-out', 'Cancelled'];
 
-            // Check for overlap:
-            // (StartA < EndB) && (EndA > StartB)
-            if (newCheckIn < existingCheckOut && newCheckOut > existingCheckIn) {
-                return false; // Overlap found, room is not available
-            }
+    const dummyGuests = Array.from({ length: 20 }).map((_, i) => {
+        const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+        const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+        const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@example.com`;
+        const phone = `+1-${Math.floor(100 + Math.random() * 900)}-${Math.floor(100 + Math.random() * 900)}-${Math.floor(1000 + Math.random() * 9000)}`;
+        const city = cities[Math.floor(Math.random() * cities.length)];
+
+        return {
+            id: generateUUID(),
+            name: `${firstName} ${lastName}`,
+            email: email,
+            phone: phone,
+            address: `${Math.floor(Math.random() * 900) + 100} Main St, ${city}, USA`
+        };
+    });
+
+    const dummyBookings = Array.from({ length: 30 }).map((_, i) => {
+        const guest = dummyGuests[Math.floor(Math.random() * dummyGuests.length)];
+        const roomNumber = Math.floor(100 + Math.random() * 400); // Rooms 100-499
+        const checkIn = getRandomDate(new Date(2023, 0, 1), new Date(2024, 11, 31));
+        const checkOut = new Date(checkIn.getTime());
+        checkOut.setDate(checkIn.getDate() + Math.floor(1 + Math.random() * 7)); // 1 to 7 nights
+        const status = statuses[Math.floor(Math.random() * statuses.length)];
+        const pricePerNight = Math.floor(100 + Math.random() * 200);
+        const nights = Math.round((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+        const totalPrice = pricePerNight * nights;
+
+        return {
+            id: generateUUID(),
+            guestName: guest.name,
+            roomNumber: roomNumber,
+            checkIn: checkIn.toISOString().split('T')[0], // YYYY-MM-DD
+            checkOut: checkOut.toISOString().split('T')[0], // YYYY-MM-DD
+            status: status,
+            totalPrice: totalPrice.toFixed(2),
+            guestId: guest.id // Link to guest data
+        };
+    });
+
+    // --- Generic Table Creator ---
+    function createInteractiveTable(headers, data, options = {}) {
+        const {
+            addActions = true, // Add Edit/Delete buttons
+            searchable = true, // Add search input
+            idPrefix = ''
+        } = options;
+
+        const tableContainer = document.createElement('div');
+        tableContainer.className = 'table-container';
+
+        // Search functionality
+        if (searchable) {
+            const searchDiv = document.createElement('div');
+            searchDiv.className = 'search-input-container';
+            const searchLabel = document.createElement('label');
+            searchLabel.textContent = 'Search:';
+            searchLabel.htmlFor = `${idPrefix}-search-input`;
+            const searchInput = document.createElement('input');
+            searchInput.type = 'text';
+            searchInput.id = `${idPrefix}-search-input`;
+            searchInput.placeholder = `Search ${idPrefix}...`;
+
+            searchDiv.appendChild(searchLabel);
+            searchDiv.appendChild(searchInput);
+            tableContainer.appendChild(searchDiv);
+
+            searchInput.addEventListener('keyup', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const rows = tableBody.querySelectorAll('tr');
+                rows.forEach(row => {
+                    const rowText = row.textContent.toLowerCase();
+                    row.style.display = rowText.includes(searchTerm) ? '' : 'none';
+                });
+            });
         }
-        return true; // No overlaps, room is available
-    };
 
-    /**
-     * Calculates the number of nights between two date strings.
-     * @param {string} checkIn - Check-in date (YYYY-MM-DD).
-     * @param {string} checkOut - Check-out date (YYYY-MM-DD).
-     * @returns {number} - Number of nights.
-     */
-    const calculateNights = (checkIn, checkOut) => {
-        if (!checkIn || !checkOut) return 0;
-        const startDate = new Date(checkIn + 'T00:00:00');
-        const endDate = new Date(checkOut + 'T00:00:00');
-        const timeDiff = endDate.getTime() - startDate.getTime();
-        return Math.ceil(timeDiff / (1000 * 3600 * 24));
-    };
+        const table = document.createElement('table');
+        const tableHead = document.createElement('thead');
+        const tableBody = document.createElement('tbody');
+        const headerRow = document.createElement('tr');
 
-    /**
-     * Opens the booking modal and populates it with room data.
-     * @param {object} roomData - The room object to book.
-     */
-    const openBookingModal = (roomData) => {
-        selectedRoom = roomData;
-        modalRoomTitle.textContent = `Book ${roomData.type} - Room ${roomData.id}`;
-        summaryRoomType.textContent = roomData.type;
-        summaryRoomPrice.textContent = roomData.price.toFixed(2);
-        summaryCheckIn.textContent = formatDateForDisplay(selectedCheckInDate);
-        summaryCheckOut.textContent = formatDateForDisplay(selectedCheckOutDate);
-
-        const nights = calculateNights(selectedCheckInDate, selectedCheckOutDate);
-        const totalPrice = nights * roomData.price;
-        summaryTotalNights.textContent = nights;
-        summaryTotalPrice.textContent = totalPrice.toFixed(2);
-
-        // Clear previous form data
-        bookingForm.reset();
-
-        bookingModal.classList.add('active');
-    };
-
-    /**
-     * Closes the booking modal.
-     */
-    const closeBookingModal = () => {
-        bookingModal.classList.remove('active');
-        selectedRoom = null;
-    };
-
-    /**
-     * Opens the booking confirmation modal.
-     * @param {object} bookingDetails - Details of the confirmed booking.
-     */
-    const openConfirmationModal = (bookingDetails) => {
-        confGuestName.textContent = bookingDetails.guestName;
-        confRoomNumber.textContent = bookingDetails.roomId;
-        confCheckIn.textContent = formatDateForDisplay(bookingDetails.checkIn);
-        confCheckOut.textContent = formatDateForDisplay(bookingDetails.checkOut);
-        confirmationModal.classList.add('active');
-    };
-
-    /**
-     * Closes the confirmation modal.
-     */
-    const closeConfirmationModal = () => {
-        confirmationModal.classList.remove('active');
-    };
-
-    // --- Core UI Rendering ---
-
-    /**
-     * Renders all room cards based on the current date selections.
-     */
-    const renderRooms = () => {
-        roomCardsContainer.innerHTML = ''; // Clear previous room cards
-        let availableRoomsCount = 0;
-
-        rooms.forEach(room => {
-            const isAvailable = selectedCheckInDate && selectedCheckOutDate
-                ? isRoomAvailable(room, selectedCheckInDate, selectedCheckOutDate)
-                : true; // If no dates selected, assume available for display
-
-            const roomCard = document.createElement('div');
-            roomCard.className = `room-card ${isAvailable ? '' : 'booked'}`;
-            roomCard.dataset.roomId = room.id;
-
-            roomCard.innerHTML = `
-                <div class="room-card-header">
-                    <h3>${room.type} - Room ${room.id}</h3>
-                    <span class="price">$${room.price}/night</span>
-                </div>
-                <div class="room-card-body">
-                    <p>${room.description}</p>
-                    <p><strong>Capacity:</strong> ${room.capacity} people</p>
-                    <p><strong>Amenities:</strong> ${room.amenities.join(', ')}</p>
-                </div>
-                <div class="room-card-footer">
-                    <span class="status ${isAvailable ? 'available' : 'booked'}">
-                        ${isAvailable ? 'Available' : 'Booked'}
-                    </span>
-                </div>
-            `;
-
-            if (isAvailable && selectedCheckInDate && selectedCheckOutDate) {
-                roomCard.addEventListener('click', () => openBookingModal(room));
-                availableRoomsCount++;
-            } else if (!isAvailable || !selectedCheckInDate || !selectedCheckOutDate) {
-                // If dates are not selected or room is booked, prevent click
-                roomCard.classList.add('disabled');
-            }
-
-            roomCardsContainer.appendChild(roomCard);
+        // Create table headers
+        headers.forEach(headerText => {
+            const th = document.createElement('th');
+            th.textContent = headerText;
+            th.setAttribute('data-column', headerText.toLowerCase().replace(/\s/g, '')); // For sorting
+            headerRow.appendChild(th);
         });
 
-        // Show/hide no rooms message
-        if (selectedCheckInDate && selectedCheckOutDate && availableRoomsCount === 0) {
-            noRoomsMessage.classList.remove('hidden');
-        } else {
-            noRoomsMessage.classList.add('hidden');
+        if (addActions) {
+            const th = document.createElement('th');
+            th.textContent = 'Actions';
+            headerRow.appendChild(th);
         }
-    };
+        tableHead.appendChild(headerRow);
+        table.appendChild(tableHead);
 
-    // --- Event Handlers ---
+        // Populate table body
+        function populateTableBody(dataToRender) {
+            tableBody.innerHTML = ''; // Clear existing rows
+            dataToRender.forEach(item => {
+                const tr = document.createElement('tr');
+                headers.forEach(headerText => {
+                    const td = document.createElement('td');
+                    const key = headerText.toLowerCase().replace(/\s/g, '');
+                    let value = item[key];
 
-    /**
-     * Handles changes to the check-in and check-out date inputs.
-     */
-    const handleDateChange = () => {
+                    // Special formatting for dates or currency
+                    if (key.includes('date') || key.includes('in') || key.includes('out')) {
+                        value = value ? new Date(value).toLocaleDateString() : '';
+                    } else if (key.includes('price')) {
+                        value = `$${parseFloat(value).toFixed(2)}`;
+                    }
+                    td.textContent = value;
+                    tr.appendChild(td);
+                });
+
+                if (addActions) {
+                    const td = document.createElement('td');
+                    td.className = 'action-buttons';
+
+                    const editButton = document.createElement('button');
+                    editButton.innerHTML = '<i class="fas fa-edit"></i>';
+                    editButton.title = 'Edit';
+                    editButton.addEventListener('click', () => alert(`Edit item with ID: ${item.id}`));
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                    deleteButton.title = 'Delete';
+                    deleteButton.className = 'delete';
+                    deleteButton.addEventListener('click', () => {
+                        if (confirm(`Are you sure you want to delete ${item.name || item.guestName}?`)) {
+                            alert(`Simulating deletion of item with ID: ${item.id}`);
+                            // In a real app, you'd send a request to the backend and re-render the table
+                        }
+                    });
+
+                    td.appendChild(editButton);
+                    td.appendChild(deleteButton);
+                    tr.appendChild(td);
+                }
+                tableBody.appendChild(tr);
+            });
+        }
+
+        populateTableBody(data);
+        table.appendChild(tableBody);
+        tableContainer.appendChild(table);
+
+        return tableContainer;
+    }
+
+
+    // --- View Rendering Functions ---
+    function renderBookings() {
+        contentArea.innerHTML = '<h2>Current Bookings</h2>';
+        const headers = ['ID', 'Guest Name', 'Room Number', 'Check In', 'Check Out', 'Status', 'Total Price'];
+        const table = createInteractiveTable(headers, dummyBookings, { idPrefix: 'bookings' });
+        contentArea.appendChild(table);
+    }
+
+    function renderGuests() {
+        contentArea.innerHTML = '<h2>Hotel Guests</h2>';
+        const headers = ['ID', 'Name', 'Email', 'Phone', 'Address'];
+        const table = createInteractiveTable(headers, dummyGuests, { idPrefix: 'guests' });
+        contentArea.appendChild(table);
+    }
+
+    function renderReports() {
+        contentArea.innerHTML = '<h2>Management Reports & Dashboard</h2>';
+
+        // Calculate metrics
+        const totalBookings = dummyBookings.length;
+        const totalGuests = dummyGuests.length;
+        const confirmedBookings = dummyBookings.filter(b => b.status === 'Confirmed').length;
+        const checkedInBookings = dummyBookings.filter(b => b.status === 'Checked-in').length;
+        const checkedOutBookings = dummyBookings.filter(b => b.status === 'Checked-out').length;
+        const cancelledBookings = dummyBookings.filter(b => b.status === 'Cancelled').length;
+
+        const totalRevenue = dummyBookings.reduce((sum, b) => sum + parseFloat(b.totalPrice), 0);
+
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // Normalize to start of day
+        const activeBookings = dummyBookings.filter(b => {
+            const checkInDate = new Date(b.checkIn);
+            const checkOutDate = new Date(b.checkOut);
+            return today >= checkInDate && today < checkOutDate && b.status === 'Checked-in';
+        });
 
-        const checkInVal = checkInDateInput.value;
-        const checkOutVal = checkOutDateInput.value;
+        // Simplified occupancy: Assuming 500 rooms total for this dummy data.
+        const totalRooms = 500;
+        const occupancyRate = totalRooms > 0 ? (activeBookings.length / totalRooms) * 100 : 0;
 
-        if (checkInVal) {
-            const checkIn = new Date(checkInVal + 'T00:00:00');
-            if (checkIn < today) {
-                dateErrorMessage.textContent = 'Check-in date cannot be in the past.';
-                selectedCheckInDate = null;
-                renderRooms();
-                return;
+        const upcomingBookings = dummyBookings.filter(b => {
+            const checkInDate = new Date(b.checkIn);
+            // Consider "upcoming" as bookings starting from tomorrow onwards.
+            return checkInDate > today && b.status === 'Confirmed';
+        }).length;
+
+
+        const dashboardGrid = document.createElement('div');
+        dashboardGrid.className = 'dashboard-grid';
+
+        const createCard = (title, value, description, className = '', progressBarValue = null) => {
+            const card = document.createElement('div');
+            card.className = `dashboard-card ${className}`;
+            card.innerHTML = `
+                <h3>${title}</h3>
+                <p class="value">${value}</p>
+                <p>${description}</p>
+            `;
+            if (progressBarValue !== null) {
+                const progressBarContainer = document.createElement('div');
+                progressBarContainer.className = 'progress-bar-container';
+                const progressBar = document.createElement('div');
+                progressBar.className = 'progress-bar';
+                progressBar.style.width = `${progressBarValue}%`;
+                progressBar.setAttribute('aria-valuenow', progressBarValue);
+                progressBar.setAttribute('aria-valuemin', '0');
+                progressBar.setAttribute('aria-valuemax', '100');
+                progressBarContainer.appendChild(progressBar);
+                card.appendChild(progressBarContainer);
             }
-        }
-
-        if (checkInVal && checkOutVal) {
-            const checkIn = new Date(checkInVal + 'T00:00:00');
-            const checkOut = new Date(checkOutVal + 'T00:00:00');
-
-            if (checkOut <= checkIn) {
-                dateErrorMessage.textContent = 'Check-out date must be after check-in date.';
-                selectedCheckInDate = null;
-                selectedCheckOutDate = null;
-                renderRooms();
-                return;
-            }
-            dateErrorMessage.textContent = '';
-            selectedCheckInDate = checkInVal;
-            selectedCheckOutDate = checkOutVal;
-        } else {
-            dateErrorMessage.textContent = '';
-            selectedCheckInDate = null;
-            selectedCheckOutDate = null;
-        }
-        renderRooms();
-    };
-
-    /**
-     * Handles the booking form submission.
-     * @param {Event} event - The form submission event.
-     */
-    const handleBookingSubmit = (event) => {
-        event.preventDefault();
-
-        if (!selectedRoom || !selectedCheckInDate || !selectedCheckOutDate) {
-            alert('Please select a room and valid dates first.');
-            return;
-        }
-
-        const guestName = guestNameInput.value.trim();
-        const guestEmail = guestEmailInput.value.trim();
-        const guestPhone = guestPhoneInput.value.trim();
-
-        if (!guestName || !guestEmail || !guestPhone) {
-            alert('Please fill in all guest details.');
-            return;
-        }
-
-        const newBooking = {
-            guestName,
-            guestEmail,
-            guestPhone,
-            checkIn: selectedCheckInDate,
-            checkOut: selectedCheckOutDate
+            return card;
         };
 
-        // Add booking to the selected room's bookings array
-        selectedRoom.bookings.push(newBooking);
+        dashboardGrid.appendChild(createCard('Total Bookings', totalBookings, 'All bookings ever recorded.'));
+        dashboardGrid.appendChild(createCard('Total Guests', totalGuests, 'Unique guests in the system.'));
+        dashboardGrid.appendChild(createCard('Active Check-ins', checkedInBookings, 'Guests currently staying in the hotel.'));
+        dashboardGrid.appendChild(createCard('Upcoming Bookings', upcomingBookings, 'Confirmed bookings for future dates.', 'upcoming'));
+        dashboardGrid.appendChild(createCard('Total Revenue', `$${totalRevenue.toFixed(2)}`, 'Total revenue generated from all bookings.', 'revenue'));
+        dashboardGrid.appendChild(createCard('Occupancy Rate', `${occupancyRate.toFixed(1)}%`, 'Current occupancy based on active check-ins and total rooms.', 'occupancy', occupancyRate));
 
-        // Update the rooms array (this simulates a backend update)
-        rooms = rooms.map(room => (room.id === selectedRoom.id ? selectedRoom : room));
 
-        // Close modal and re-render rooms to show updated availability
-        closeBookingModal();
-        renderRooms();
+        contentArea.appendChild(dashboardGrid);
+    }
 
-        // Show confirmation
-        openConfirmationModal({
-            guestName: guestName,
-            roomId: selectedRoom.id,
-            checkIn: selectedCheckInDate,
-            checkOut: selectedCheckOutDate
+    // --- Tab Switching Logic ---
+    function activateTab(activeTabId) {
+        navLinks.forEach(link => {
+            link.classList.remove('active');
         });
+        document.getElementById(activeTabId).classList.add('active');
 
-        console.log('Booking Confirmed:', newBooking, 'for Room:', selectedRoom.id);
-    };
+        switch (activeTabId) {
+            case 'nav-bookings':
+                renderBookings();
+                break;
+            case 'nav-guests':
+                renderGuests();
+                break;
+            case 'nav-reports':
+                renderReports();
+                break;
+            default:
+                renderBookings(); // Default view
+                break;
+        }
+    }
 
-    // --- Initialization ---
-
-    /**
-     * Sets up initial UI state and event listeners.
-     */
-    const initializeApp = () => {
-        // Set min date for check-in to today
-        const today = new Date();
-        const todayString = today.toISOString().split('T')[0];
-        checkInDateInput.setAttribute('min', todayString);
-        checkOutDateInput.setAttribute('min', todayString);
-
-        // Event Listeners for date inputs
-        checkInDateInput.addEventListener('change', handleDateChange);
-        checkOutDateInput.addEventListener('change', handleDateChange);
-
-        // Event Listener for booking form submission
-        bookingForm.addEventListener('submit', handleBookingSubmit);
-
-        // Event Listeners for modal close buttons
-        bookingModalCloseButton.addEventListener('click', closeBookingModal);
-        confirmationModalCloseButton.addEventListener('click', closeConfirmationModal);
-        closeConfirmationBtn.addEventListener('click', closeConfirmationModal);
-
-        // Close modal if clicking outside content
-        window.addEventListener('click', (event) => {
-            if (event.target === bookingModal) {
-                closeBookingModal();
-            }
-            if (event.target === confirmationModal) {
-                closeConfirmationModal();
-            }
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            activateTab(e.target.id);
         });
+    });
 
-        // Initial render of rooms
-        renderRooms();
-    };
-
-    initializeApp();
+    // Initial page load: render bookings view
+    activateTab('nav-bookings');
 });
