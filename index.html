@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Management App - Room Booking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">🏨 Zenith Hotel Management</h1>
+            <nav class="nav">
+                <ul>
+                    <li><a href="#" class="active">Rooms</a></li>
+                    <li><a href="#">Bookings</a></li>
+                    <li><a href="#">Guests</a></li>
+                    <li><a href="#">Reports</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content container">
+        <section class="booking-controls">
+            <h2>Find Your Perfect Room</h2>
+            <div class="date-picker-group">
+                <div class="date-input-wrapper">
+                    <label for="check-in-date">Check-in Date:</label>
+                    <input type="date" id="check-in-date" required>
+                </div>
+                <div class="date-input-wrapper">
+                    <label for="check-out-date">Check-out Date:</label>
+                    <input type="date" id="check-out-date" required>
+                </div>
+            </div>
+            <p id="date-error" class="error-message"></p>
+        </section>
+
+        <section class="room-list">
+            <h2>Available Rooms</h2>
+            <div id="room-cards-container" class="room-cards-grid">
+                <!-- Room cards will be dynamically loaded here by JavaScript -->
+                <p id="no-rooms-message" class="info-message hidden">No rooms available for the selected dates.</p>
+            </div>
+        </section>
+    </main>
+
+    <div id="booking-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 id="modal-room-title">Book Room</h2>
+            <form id="booking-form">
+                <div class="form-group">
+                    <label for="guest-name">Guest Name:</label>
+                    <input type="text" id="guest-name" placeholder="Enter full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="guest-email">Email:</label>
+                    <input type="email" id="guest-email" placeholder="Enter email address" required>
+                </div>
+                <div class="form-group">
+                    <label for="guest-phone">Phone:</label>
+                    <input type="tel" id="guest-phone" placeholder="e.g., +1 (555) 123-4567" required>
+                </div>
+                <div class="booking-summary">
+                    <p><strong>Room Type:</strong> <span id="summary-room-type"></span></p>
+                    <p><strong>Price per night:</strong> $<span id="summary-room-price"></span></p>
+                    <p><strong>Check-in:</strong> <span id="summary-check-in"></span></p>
+                    <p><strong>Check-out:</strong> <span id="summary-check-out"></span></p>
+                    <p><strong>Total Nights:</strong> <span id="summary-total-nights"></span></p>
+                    <p class="total-price"><strong>Total Price:</strong> $<span id="summary-total-price"></span></p>
+                </div>
+                <button type="submit" class="btn primary-btn">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Booking Confirmed!</h2>
+            <p>Thank you, <strong id="conf-guest-name"></strong>!</p>
+            <p>Your booking for room <strong id="conf-room-number"></strong> has been successfully placed.</p>
+            <p>Check-in: <strong id="conf-check-in"></strong></p>
+            <p>Check-out: <strong id="conf-check-out"></strong></p>
+            <button class="btn primary-btn close-confirmation-btn">Done</button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2023 Zenith Hotel Management. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
