@@ -5,27 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hotel Management Dashboard</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Font Awesome for icons (optional, but nice for edit/delete) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Hotel Management System</h1>
-        </header>
+    <header>
+        <h1>Hotel Management Dashboard</h1>
+    </header>
 
-        <nav>
-            <ul>
-                <li><a href="#" id="nav-bookings" class="active">Bookings</a></li>
-                <li><a href="#" id="nav-guests">Guests</a></li>
-                <li><a href="#" id="nav-reports">Reports</a></li>
-            </ul>
-        </nav>
+    <main>
+        <!-- Section for adding new rooms -->
+        <section class="add-room-section card">
+            <h2>Add New Room</h2>
+            <form id="addRoomForm">
+                <div class="form-group">
+                    <label for="roomNumber">Room Number:</label>
+                    <input type="text" id="roomNumber" required placeholder="e.g., 101, 205A">
+                </div>
+                <div class="form-group">
+                    <label for="roomType">Room Type:</label>
+                    <select id="roomType" required>
+                        <option value="Standard">Standard</option>
+                        <option value="Deluxe">Deluxe</option>
+                        <option value="Suite">Suite</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="roomPrice">Price per Night ($):</label>
+                    <input type="number" id="roomPrice" min="0" step="0.01" required placeholder="e.g., 100.00">
+                </div>
+                <button type="submit" class="btn btn-primary">Add Room</button>
+            </form>
+        </section>
 
-        <main id="content-area">
-            <!-- Content will be dynamically loaded here by JavaScript -->
-        </main>
-    </div>
+        <!-- Section for displaying room list and filters -->
+        <section class="room-list-section">
+            <div class="controls card">
+                <h2>Room List</h2>
+                <div class="filters">
+                    <label for="filterStatus">Filter by Status:</label>
+                    <select id="filterStatus">
+                        <option value="All">All</option>
+                        <option value="Available">Available</option>
+                        <option value="Occupied">Occupied</option>
+                        <option value="Needs Cleaning">Needs Cleaning</option>
+                    </select>
+                </div>
+            </div>
+            <div id="roomList" class="room-grid">
+                <!-- Room cards will be rendered here by JavaScript -->
+            </div>
+        </section>
+    </main>
 
     <script src="script.js"></script>
 </body>
