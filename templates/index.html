@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Your Birthday Website</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Create a Personalized Birthday Website!</h1>
+        <p>Fill out the details below to generate a unique birthday greeting page.</p>
+
+        {% if error %}
+            <p class="error-message">{{ error }}</p>
+        {% endif %}
+
+        <form action="/" method="POST">
+            <div class="form-group">
+                <label for="recipient_name">Recipient's Name:</label>
+                <input type="text" id="recipient_name" name="recipient_name" placeholder="e.g., John Doe" required>
+            </div>
+            <div class="form-group">
+                <label for="sender_name">Your Name (Sender):</label>
+                <input type="text" id="sender_name" name="sender_name" placeholder="e.g., Jane Smith" required>
+            </div>
+            <div class="form-group">
+                <label for="birthday_message">Birthday Message:</label>
+                <textarea id="birthday_message" name="birthday_message" rows="6" placeholder="Wish them a fantastic day!" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="background_color">Background Color (Optional):</label>
+                <input type="color" id="background_color" name="background_color" value="#f0f8ff">
+            </div>
+            <button type="submit">Generate Birthday Website</button>
+        </form>
+    </div>
+</body>
+</html>
