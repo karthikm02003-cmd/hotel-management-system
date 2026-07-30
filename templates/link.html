@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Birthday Website Link</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Your Birthday Website Has Been Created!</h1>
+        <p>Share this unique link with the birthday person:</p>
+        <div class="link-display">
+            <input type="text" id="birthdayLink" value="{{ birthday_url }}" readonly>
+            <button onclick="copyLink()">Copy Link</button>
+        </div>
+        <a href="{{ birthday_url }}" target="_blank" class="button primary-button">Visit Your Birthday Website</a>
+        <a href="{{ url_for('index') }}" class="button secondary-button">Create Another</a>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
