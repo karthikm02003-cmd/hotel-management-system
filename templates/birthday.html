@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, {{ recipient }}!</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            background-color: {{ bg_color }}; /* Dynamic background color */
+        }
+    </style>
+</head>
+<body>
+    <div class="birthday-card">
+        <div class="header">
+            <h1>Happy Birthday, {{ recipient }}! 🎉</h1>
+        </div>
+        <div class="message-body">
+            <p>{{ message | replace('\n', '<br>') | safe }}</p>
+        </div>
+        <div class="signature">
+            <p>With love,</p>
+            <p class="sender">{{ sender }}</p>
+        </div>
+    </div>
+</body>
+</html>
