@@ -1,0 +1,285 @@
+/* General Body and Container Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to top for longer forms */
+    min-height: 100vh;
+    background-color: #e6f7ff; /* Light blue background for general pages */
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    box-sizing: border-box;
+    margin-top: 30px; /* Space from top */
+    text-align: center;
+}
+
+h1 {
+    color: #4a90e2;
+    margin-bottom: 20px;
+    font-size: 2em;
+    font-weight: 600;
+}
+
+p {
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+/* Form Styles */
+form {
+    text-align: left;
+    margin-top: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+    font-size: 1em;
+}
+
+.form-group input[type="text"],
+.form-group input[type="color"],
+.form-group textarea {
+    width: calc(100% - 20px); /* Adjust for padding */
+    padding: 12px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Button Styles */
+button[type="submit"], .button {
+    background-color: #5cb85c; /* Green for submit/primary actions */
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none; /* For anchor buttons */
+    display: inline-block;
+    margin-top: 20px;
+}
+
+button[type="submit"]:hover, .button.primary-button:hover {
+    background-color: #4cae4c;
+    transform: translateY(-2px);
+}
+
+.button.primary-button {
+    background-color: #4a90e2; /* Blue for primary */
+}
+
+.button.primary-button:hover {
+    background-color: #357ABD;
+}
+
+.button.secondary-button {
+    background-color: #6c757d; /* Grey for secondary */
+    margin-left: 10px;
+}
+
+.button.secondary-button:hover {
+    background-color: #5a6268;
+}
+
+/* Link Display for Generated URL */
+.link-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25px;
+    margin-bottom: 30px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.link-display input {
+    flex-grow: 1;
+    padding: 12px 10px;
+    border: none;
+    background-color: #f8f9fa;
+    font-family: monospace;
+    font-size: 1em;
+    color: #4a90e2;
+}
+
+.link-display button {
+    background-color: #6c757d; /* Grey copy button */
+    color: white;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 0 5px 5px 0; /* Only right corners */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0; /* Don't let button shrink */
+    margin-top: 0;
+}
+
+.link-display button:hover {
+    background-color: #5a6268;
+}
+
+/* Birthday Card Specific Styles */
+.birthday-card {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 700px;
+    text-align: center;
+    margin: 50px auto;
+    box-sizing: border-box;
+    transform: rotateX(5deg) rotateY(-5deg); /* Slight 3D effect */
+    transition: transform 0.5s ease-in-out;
+}
+
+.birthday-card:hover {
+    transform: rotateX(0deg) rotateY(0deg); /* Straighten on hover */
+}
+
+.birthday-card .header h1 {
+    font-size: 3.5em;
+    color: #ff6347; /* Tomato red for festive feel */
+    margin-bottom: 25px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.birthday-card .message-body p {
+    font-size: 1.4em;
+    color: #555;
+    margin-bottom: 35px;
+    white-space: pre-wrap; /* Preserve line breaks from textarea */
+}
+
+.birthday-card .signature {
+    text-align: right;
+    margin-top: 40px;
+    border-top: 1px dashed #ccc;
+    padding-top: 20px;
+}
+
+.birthday-card .signature p {
+    font-size: 1.1em;
+    margin: 5px 0;
+    color: #777;
+}
+
+.birthday-card .signature .sender {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #4a90e2;
+    font-style: italic;
+}
+
+/* Error Message */
+.error-message {
+    color: #dc3545; /* Red color for error messages */
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .container, .birthday-card {
+        padding: 25px;
+        margin-top: 20px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .birthday-card .header h1 {
+        font-size: 2.5em;
+    }
+
+    .birthday-card .message-body p {
+        font-size: 1.2em;
+    }
+
+    .form-group input, .form-group textarea, .link-display input, .link-display button {
+        font-size: 0.95em;
+        padding: 10px;
+    }
+
+    button[type="submit"], .button {
+        width: 100%;
+        margin-left: 0;
+        margin-bottom: 10px;
+    }
+
+    .button.secondary-button {
+        margin-top: 0;
+    }
+
+    .link-display {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .link-display input {
+        width: 100%;
+        border-radius: 5px 5px 0 0;
+    }
+
+    .link-display button {
+        width: 100%;
+        border-radius: 0 0 5px 5px;
+        padding: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container, .birthday-card {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
+    .birthday-card .header h1 {
+        font-size: 2em;
+    }
+}
